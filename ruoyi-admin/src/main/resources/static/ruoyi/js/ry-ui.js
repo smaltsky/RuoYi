@@ -116,12 +116,17 @@ var table = {
                     mobileResponsive: options.mobileResponsive,         // 是否支持移动端适配
                     cardView: options.cardView,                         // 是否启用显示卡片视图
                     detailView: options.detailView,                     // 是否启用显示细节视图
+                    onCheck: options.onCheck,                           // 当选择此行时触发
+                    onUncheck: options.onUncheck,                       // 当取消此行时触发
+                    onCheckAll: options.onCheckAll,                     // 当全选行时触发
+                    onUncheckAll: options.onUncheckAll,                 // 当取消全选行时触发
                     onClickRow: options.onClickRow,                     // 点击某行触发的事件
                     onDblClickRow: options.onDblClickRow,               // 双击某行触发的事件
                     onClickCell: options.onClickCell,                   // 单击某格触发的事件
                     onDblClickCell: options.onDblClickCell,             // 双击某格触发的事件
                     onEditableSave: options.onEditableSave,             // 行内编辑保存的事件
                     onExpandRow: options.onExpandRow,                   // 点击详细视图的事件
+                    onPostBody: options.onPostBody,                     // 渲染完成后执行的事件
                     maintainSelected: options.maintainSelected,         // 前端翻页时保留所选行
                     rememberSelected: options.rememberSelected,         // 启用翻页记住前面的选择
                     fixedColumns: options.fixedColumns,                 // 是否启用冻结列（左侧）
@@ -579,7 +584,7 @@ var table = {
                     expandFirst: options.expandFirst,                   // 是否默认第一级展开--expandAll为false时生效
                     columns: options.columns,                           // 显示列信息（*）
                     responseHandler: $.treeTable.responseHandler,       // 在加载服务器发送来的数据之前处理函数
-                    onLoadSuccess: $.table.onLoadSuccess                // 当所有数据被加载时触发处理函数
+                    onLoadSuccess: $.treeTable.onLoadSuccess            // 当所有数据被加载时触发处理函数
                 });
             },
             // 条件查询
@@ -610,6 +615,13 @@ var table = {
                 } else {
                     return res;
                 }
+            },
+            // 当所有数据被加载时触发
+            onLoadSuccess: function(data) {
+            	if (typeof table.options.onLoadSuccess == "function") {
+                    table.options.onLoadSuccess(data);
+            	}
+            	$(".table [data-toggle='tooltip']").tooltip();
             },
         },
         // 表单封装处理

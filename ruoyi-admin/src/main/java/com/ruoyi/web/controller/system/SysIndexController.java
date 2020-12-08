@@ -9,7 +9,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.ModelMap;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
-import com.ruoyi.common.config.Global;
+import com.ruoyi.common.config.RuoYiConfig;
 import com.ruoyi.common.core.controller.BaseController;
 import com.ruoyi.common.core.domain.entity.SysMenu;
 import com.ruoyi.common.core.domain.entity.SysUser;
@@ -49,8 +49,8 @@ public class SysIndexController extends BaseController
         mmap.put("sideTheme", configService.selectConfigByKey("sys.index.sideTheme"));
         mmap.put("skinName", configService.selectConfigByKey("sys.index.skinName"));
         mmap.put("ignoreFooter", configService.selectConfigByKey("sys.index.ignoreFooter"));
-        mmap.put("copyrightYear", Global.getCopyrightYear());
-        mmap.put("demoEnabled", Global.isDemoEnabled());
+        mmap.put("copyrightYear", RuoYiConfig.getCopyrightYear());
+        mmap.put("demoEnabled", RuoYiConfig.isDemoEnabled());
         mmap.put("isDefaultModifyPwd", initPasswordIsModify(user.getPwdUpdateDate()));
         mmap.put("isPasswordExpired", passwordIsExpiration(user.getPwdUpdateDate()));
 
@@ -91,22 +91,22 @@ public class SysIndexController extends BaseController
     @GetMapping("/system/main")
     public String main(ModelMap mmap)
     {
-        mmap.put("version", Global.getVersion());
+        mmap.put("version", RuoYiConfig.getVersion());
         return "main";
     }
 
     // 检查初始密码是否提醒修改
     public boolean initPasswordIsModify(Date pwdUpdateDate)
     {
-        int initPasswordModify = Convert.toInt(configService.selectConfigByKey("sys.account.initPasswordModify"));
-        return initPasswordModify == 1 && pwdUpdateDate == null;
+        Integer initPasswordModify = Convert.toInt(configService.selectConfigByKey("sys.account.initPasswordModify"));
+        return initPasswordModify != null && initPasswordModify == 1 && pwdUpdateDate == null;
     }
 
     // 检查密码是否过期
     public boolean passwordIsExpiration(Date pwdUpdateDate)
     {
-        int passwordValidateDays = Convert.toInt(configService.selectConfigByKey("sys.account.passwordValidateDays"));
-        if (passwordValidateDays > 0)
+        Integer passwordValidateDays = Convert.toInt(configService.selectConfigByKey("sys.account.passwordValidateDays"));
+        if (passwordValidateDays != null && passwordValidateDays > 0)
         {
             if (StringUtils.isNull(pwdUpdateDate))
             {

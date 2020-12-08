@@ -438,8 +438,37 @@ var sub = {
             return;
         }
         $("#" + table.options.id).bootstrapTable('remove', { field: subColumn, values: ids });
+    },
+    addColumn: function(row, tableId) {
+    	var currentId = $.common.isEmpty(tableId) ? table.options.id : tableId;
+    	table.set(currentId);
+    	var count = $("#" + currentId).bootstrapTable('getData').length;
+    	sub.editColumn();
+    	$("#" + currentId).bootstrapTable('insertRow', {
+            index: count + 1,
+            row: row
+        });
     }
 };
+
+// 动态加载css文件
+function loadCss(file, headElem) {
+    var link = document.createElement('link');
+    link.href = file;
+    link.rel = 'stylesheet';
+    link.type = 'text/css';
+    if (headElem) headElem.appendChild(link);
+    else document.getElementsByTagName('head')[0].appendChild(link);
+}
+
+// 动态加载js文件
+function loadJs(file, headElem) {
+    var script = document.createElement('script');
+    script.src = file;
+    script.type = 'text/javascript';
+    if (headElem) headElem.appendChild(script);
+    else document.getElementsByTagName('head')[0].appendChild(script);
+}
 
 /** 设置全局ajax处理 */
 $.ajaxSetup({
